@@ -51,4 +51,10 @@ public class PaisResource {
 		service.delete(id);
 		return ResponseEntity.ok().build();
 	}
+	
+	@GetMapping("/name/{name}")
+	public ResponseEntity<List<Pais>> findByName(@PathVariable String name) {
+		List<Pais> lista = service.findByName(name);
+		return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build(); 
+	}
 }

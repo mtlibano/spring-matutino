@@ -27,7 +27,7 @@ public class EquipeServiceImpl implements EquipeService {
 
     @Override
     public Equipe findById(Integer id) {
-        Optional<Equipe> opt = repository.findById();
+        Optional<Equipe> opt = repository.findById(id);
         return opt.orElse(null);
     }
 

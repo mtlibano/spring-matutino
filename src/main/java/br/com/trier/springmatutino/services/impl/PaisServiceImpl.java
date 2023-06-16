@@ -41,7 +41,11 @@ public class PaisServiceImpl implements PaisService{
 		if(pais != null) {
 			repository.delete(pais);
 		}
-		
+	}
+
+	@Override
+	public List<Pais> findByName(String name) {
+		return repository.findByName(name);
 	}
 
 }

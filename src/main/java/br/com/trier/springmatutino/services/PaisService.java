@@ -10,5 +10,6 @@ public interface PaisService {
 	Pais findById(Integer id);
 	Pais update(Pais pais);
 	void delete(Integer id);
+	List<Pais> findByName(String name);
 
 }
