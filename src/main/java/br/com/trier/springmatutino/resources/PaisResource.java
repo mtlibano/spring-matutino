@@ -20,7 +20,7 @@ public class PaisResource {
 	
 	@Autowired
 	private PaisService service;
-	/*
+	
 	@PostMapping
 	public ResponseEntity<Pais> insert(@RequestBody Pais pais) {
 		Pais newPais = service.salvar(pais);
@@ -62,6 +62,6 @@ public class PaisResource {
 	public ResponseEntity<List<Pais>> findByNameContains(@PathVariable String name) {
 		List<Pais> lista = service.findByNameContains(name);
 		return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
-	}*/
+	}
 
 }

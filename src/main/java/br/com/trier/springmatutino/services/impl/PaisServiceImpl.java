@@ -7,15 +7,25 @@ import org.springframework.stereotype.Service;
 import br.com.trier.springmatutino.domain.Pais;
 import br.com.trier.springmatutino.repositories.PaisRepository;
 import br.com.trier.springmatutino.services.PaisService;
+import br.com.trier.springmatutino.services.exceptions.ObjetoNaoEncontrado;
+import br.com.trier.springmatutino.services.exceptions.ViolacaoIntegridade;
 
 @Service
 public class PaisServiceImpl implements PaisService{
 	
 	@Autowired
 	PaisRepository repository;
+	
+	private void verificarNome(Pais obj) {
+		Pais pais = repository.findByName(obj.getName());
+		if (pais != null && pais.getId() != obj.getId()) {
+			throw new ViolacaoIntegridade("País já cadastrado: %s".formatted(obj.getName()));
+		}
+	}
 
 	@Override
 	public Pais salvar(Pais pais) {
+		verificarNome(pais);
 		return repository.save(pais);
 	}
 
@@ -27,20 +37,20 @@ public class PaisServiceImpl implements PaisService{
 	@Override
 	public Pais findById(Integer id) {
 		Optional<Pais> obj = repository.findById(id);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ObjetoNaoEncontrado("País %s não encontrado".formatted(id)));
 	}
 
 	@Override
 	public Pais update(Pais pais) {
+		verificarNome(pais);
+		findById(pais.getId());
 		return repository.save(pais);
 	}
 
 	@Override
 	public void delete(Integer id) {
 		Pais pais = findById(id);
-		if(pais != null) {
-			repository.delete(pais);
-		}
+		repository.delete(pais);
 	}
 
 	@Override
@@ -49,8 +59,8 @@ public class PaisServiceImpl implements PaisService{
 	}
 
 	@Override
-	public List<Pais> findByNameContains(String name) {
-		return repository.findByNameContains(name);
+	public List<Pais> findByNameContainsIgnoreCase(String name) {
+		return repository.findByNameContainsIgnoreCase(name);
 	}
 
 }

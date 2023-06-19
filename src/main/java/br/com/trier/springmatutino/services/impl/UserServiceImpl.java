@@ -7,45 +7,59 @@ import org.springframework.stereotype.Service;
 import br.com.trier.springmatutino.domain.User;
 import br.com.trier.springmatutino.repositories.UserRepository;
 import br.com.trier.springmatutino.services.UserService;
+import br.com.trier.springmatutino.services.exceptions.ObjetoNaoEncontrado;
+import br.com.trier.springmatutino.services.exceptions.ViolacaoIntegridade;
 
 @Service
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
-	UserRepository repository;	
+	UserRepository repository;
+	
+	private void findByEmail(User obj) {
+		User user = repository.findByEmail(obj.getEmail());
+		if (user != null && user.getId() != obj.getId()) {
+			throw new ViolacaoIntegridade("Email já cadastrado: %s".formatted(obj.getEmail()));
+		}
+	}
 
 	@Override
 	public User salvar(User user) {
+		findByEmail(user);
 		return repository.save(user);
 	}
 
 	@Override
 	public List<User> listAll() {
+		//tratar lista vazia
 		return repository.findAll();
 	}
 
 	@Override
 	public User findById(Integer id) {
 		Optional<User> obj = repository.findById(id);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ObjetoNaoEncontrado("Usuário %s não encontrado".formatted(id)));
 	}
 
 	@Override
 	public User update(User user) {
+		findByEmail(user);
 		return repository.save(user);
 	}
 
 	@Override
 	public void delete(Integer id) {
 		User user = findById(id);
-		if(user != null) {
-			repository.delete(user);
-		}		
+		repository.delete(user);	
 	}
 
 	@Override
 	public List<User> findByName(String name) {
-		return repository.findByName(name);
+		List<User> lista = repository.findByName(name);
+		if (lista.size() == 0) {
+			throw new ObjetoNaoEncontrado("Nenhum usuário encontrado: %s".formatted(name));
+		}
+		return lista;
 	}
 
 }

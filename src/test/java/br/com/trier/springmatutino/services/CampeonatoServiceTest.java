@@ -89,8 +89,8 @@ public class CampeonatoServiceTest extends BaseTests {
     @Test
     @DisplayName("Buscar campeonato por nome/contains")
     @Sql({"classpath:/resources/sqls/campeonato.sql"})
-    void findByNameContainsTest() {
-        List<Campeonato> lista = campeonatoService.findByDescricaoContains("Formula");
+    void findByNameContainsIgnoreCaseTest() {
+        List<Campeonato> lista = campeonatoService.findByDescricaoContainsIgnoreCase("Formula");
         assertEquals(2, lista.size());
     }
 
@@ -111,6 +111,16 @@ public class CampeonatoServiceTest extends BaseTests {
         assertEquals(2, lista.size());
         assertEquals("Formula1", lista.get(0).getDescricao());
         assertEquals("Nascar", lista.get(1).getDescricao());
+    }
+    
+    @Test
+    @DisplayName("Buscar campeonato por descricao e ano")
+    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    void findByDescricaoAndAno() {
+        List<Campeonato> lista = campeonatoService.findByDescricaoIgnoreCaseAndAnoEquals("formula1", 2020);
+        assertEquals(1, lista.size());
+        assertEquals("Formula1", lista.get(0).getDescricao());
+        assertEquals(2020, lista.get(0).getAno());
     }
 
 }

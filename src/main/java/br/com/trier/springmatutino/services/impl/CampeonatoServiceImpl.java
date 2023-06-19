@@ -49,8 +49,8 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     }
 
     @Override
-    public List<Campeonato> findByDescricaoContains(String descricao) {
-        return repository.findByDescricaoContains(descricao);
+    public List<Campeonato> findByDescricaoContainsIgnoreCase(String descricao) {
+        return repository.findByDescricaoContainsIgnoreCase(descricao);
     }
 
     @Override
@@ -62,5 +62,10 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     public List<Campeonato> findByAnoBetween(Integer ano1, Integer ano2) {
         return repository.findByAnoBetween(ano1, ano2);
     }
+
+	@Override
+	public List<Campeonato> findByDescricaoIgnoreCaseAndAnoEquals(String descricao, Integer ano) {
+		return repository.findByDescricaoIgnoreCaseAndAnoEquals(descricao, ano);
+	}
 
 }

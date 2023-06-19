@@ -2,6 +2,9 @@ package br.com.trier.springmatutino.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import br.com.trier.springmatutino.services.exceptions.ObjetoNaoEncontrado;
+import br.com.trier.springmatutino.services.exceptions.ViolacaoIntegridade;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,8 +34,8 @@ public class PaisServiceTest extends BaseTests {
 	@DisplayName("Buscar pais por id inexistente")
 	@Sql({"classpath:/resources/sqls/pais.sql"})
 	void findByIdTestInexistente() {
-		var pais = paisService.findById(4);
-		assertThat(pais).isNull();
+		var exception = assertThrows(ObjetoNaoEncontrado.class, () -> paisService.findById(10));
+		assertEquals("País 10 não encontrado", exception.getMessage());;
 	}
 	
 	@Test
@@ -54,6 +57,14 @@ public class PaisServiceTest extends BaseTests {
 	}
 	
 	@Test
+	@DisplayName("Cadastrar pais existente")
+	void salvarExistente() {
+		paisService.salvar(new Pais(null, "Chile"));
+		var exception = assertThrows(ViolacaoIntegridade.class, () -> paisService.salvar(new Pais(null, "Chile")));
+		assertEquals("País já cadastrado: Chile", exception.getMessage());
+	}
+	
+	@Test
 	@DisplayName("Update pais")
 	@Sql({"classpath:/resources/sqls/pais.sql"})
 	void updateTest() {
@@ -65,12 +76,38 @@ public class PaisServiceTest extends BaseTests {
 	}
 	
 	@Test
+	@DisplayName("Update pais existente")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+	void updateExistenteTest() {
+		var exception = assertThrows(ViolacaoIntegridade.class, () -> paisService.update(new Pais(2, "Brasil")));
+		assertEquals("País já cadastrado: Brasil", exception.getMessage());
+	}
+	
+	@Test
+	@DisplayName("Update pais inexistente")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+	void updateInexistenteTest() {
+		var exception = assertThrows(ObjetoNaoEncontrado.class, () -> paisService.update(new Pais(10, "Peru")));
+		assertEquals("País 10 não encontrado", exception.getMessage());
+	}
+	
+	@Test
 	@DisplayName("Delete pais")
 	@Sql({"classpath:/resources/sqls/pais.sql"})
 	void deleteTest() {
 		paisService.delete(2);
 		List<Pais> lista = paisService.listAll();
 		assertEquals(2, lista.size());
+	}
+	
+	@Test
+	@DisplayName("Delete pais inexistente")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+	void deleteInexistenteTest() {
+		var exception = assertThrows(ObjetoNaoEncontrado.class, () -> paisService.delete(10));
+		assertEquals("País 10 não encontrado", exception.getMessage());
+		List<Pais> lista = paisService.listAll();
+		assertEquals(3, lista.size());
 	}
 	
 	@Test
@@ -85,7 +122,7 @@ public class PaisServiceTest extends BaseTests {
 	@DisplayName("Buscar pais por nome/contains")
 	@Sql({"classpath:/resources/sqls/pais.sql"})
 	void findByNameContainsTest() {
-		List<Pais> lista = paisService.findByNameContains("B");
+		List<Pais> lista = paisService.findByNameContainsIgnoreCase("B");
 		assertEquals(1, lista.size());
 	}
 
