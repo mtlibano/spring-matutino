@@ -52,4 +52,28 @@ public class CampeonatoResource {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/descricao/{descricao}")
+    public ResponseEntity<List<Campeonato>> findByDescricaoIgnoreCase(@PathVariable String descricao) {
+        List<Campeonato> lista = service.findByDescricaoIgnoreCase(descricao);
+        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/descricao/contains/{descricao}")
+    public ResponseEntity<List<Campeonato>> findByDescricaoContains(@PathVariable String descricao) {
+        List<Campeonato> lista = service.findByDescricaoContains(descricao);
+        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/ano/{ano}")
+    public ResponseEntity<List<Campeonato>> findByAno(@PathVariable Integer ano) {
+        List<Campeonato> lista = service.findByAno(ano);
+        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/ano/{ano1}/{ano2}")
+    public ResponseEntity<List<Campeonato>> findByAno(@PathVariable Integer ano1, @PathVariable Integer ano2) {
+        List<Campeonato> lista = service.findByAnoBetween(ano1, ano2);
+        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+    }
+
 }

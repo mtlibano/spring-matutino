@@ -52,4 +52,16 @@ public class EquipeResource {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<Equipe>> findByNameIgnoreCase(@PathVariable String name) {
+        List<Equipe> lista = service.findByNameIgnoreCase(name);
+        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/name/contains/{name}")
+    public ResponseEntity<List<Equipe>> findByNameContains(@PathVariable String name) {
+        List<Equipe> lista = service.findByNameContains(name);
+        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+    }
+
 }

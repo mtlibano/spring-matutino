@@ -4,14 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-
+import br.com.trier.springmatutino.domain.User;
+import br.com.trier.springmatutino.BaseTests;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
-
-import br.com.trier.springmatutino.BaseTests;
-import br.com.trier.springmatutino.domain.User;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -19,7 +17,7 @@ public class UserServiceTest extends BaseTests {
 	
 	@Autowired
 	UserService userService;
-	
+
 	@Test
 	@DisplayName("Buscar user por id")
 	@Sql({"classpath:/resources/sqls/usuario.sql"})
@@ -90,8 +88,5 @@ public class UserServiceTest extends BaseTests {
 		lista = userService.findByName("nikitest");
 		assertEquals(1, lista.size());
 	}
-	
-	
-	
 
 }

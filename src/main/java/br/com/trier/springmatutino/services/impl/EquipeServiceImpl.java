@@ -44,4 +44,14 @@ public class EquipeServiceImpl implements EquipeService {
         }
     }
 
+    @Override
+    public List<Equipe> findByNameIgnoreCase(String name) {
+        return repository.findByNameIgnoreCase(name);
+    }
+
+    @Override
+    public List<Equipe> findByNameContains(String name) {
+        return repository.findByNameContains(name);
+    }
+
 }

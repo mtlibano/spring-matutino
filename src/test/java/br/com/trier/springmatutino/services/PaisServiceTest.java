@@ -13,7 +13,7 @@ import jakarta.transaction.Transactional;
 
 @Transactional
 public class PaisServiceTest extends BaseTests {
-	
+
 	@Autowired
 	PaisService paisService;
 	
@@ -76,10 +76,16 @@ public class PaisServiceTest extends BaseTests {
 	@Test
 	@DisplayName("Buscar pais por nome")
 	@Sql({"classpath:/resources/sqls/pais.sql"})
-	void findByNameTest() {
-		List<Pais> lista = paisService.findByName("Brasil");
+	void findByNameIgnoreCaseTest() {
+		List<Pais> lista = paisService.findByNameIgnoreCase("brasil");
 		assertEquals(1, lista.size());
-		lista = paisService.findByName("Argentina");
+	}
+
+	@Test
+	@DisplayName("Buscar pais por nome/contains")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+	void findByNameContainsTest() {
+		List<Pais> lista = paisService.findByNameContains("B");
 		assertEquals(1, lista.size());
 	}
 
