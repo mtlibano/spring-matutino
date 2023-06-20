@@ -2,6 +2,8 @@ package br.com.trier.springmatutino.services;
 
 import br.com.trier.springmatutino.BaseTests;
 import br.com.trier.springmatutino.domain.Campeonato;
+import br.com.trier.springmatutino.services.exceptions.ObjetoNaoEncontrado;
+import br.com.trier.springmatutino.services.exceptions.ViolacaoIntegridade;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 public class CampeonatoServiceTest extends BaseTests {
@@ -31,28 +34,35 @@ public class CampeonatoServiceTest extends BaseTests {
     @Test
     @DisplayName("Buscar campeonato por id inexistente")
     @Sql({"classpath:/resources/sqls/campeonato.sql"})
-    void findByIdTestInexistente() {
-        var campeonato = campeonatoService.findById(4);
-        assertThat(campeonato).isNull();
+    void findByIdErrorTest() {
+        var exception = assertThrows(ObjetoNaoEncontrado.class, () -> campeonatoService.findById(10));
+        assertEquals("Campeonato 10 não encontrado!", exception.getMessage());
     }
 
     @Test
     @DisplayName("Listar todos")
     @Sql({"classpath:/resources/sqls/campeonato.sql"})
-    void listAll() {
+    void listAllTest() {
         var lista = campeonatoService.listAll();
         assertEquals(3, lista.size());
     }
 
     @Test
     @DisplayName("Cadastrar campeonato")
-    void salvar() {
+    void salvarTest() {
         Campeonato campeonato = campeonatoService.salvar(new Campeonato(null, "LeMans", 2023));
         assertThat(campeonato).isNotNull();
         var campeonatoTest = campeonatoService.findById(1);
         assertEquals(1, campeonatoTest.getId());
         assertEquals("LeMans", campeonatoTest.getDescricao());
         assertEquals(2023, campeonatoTest.getAno());
+    }
+
+    @Test
+    @DisplayName("Cadastrar campeonato data ERROR")
+    void salvarDataErrorTest() {
+        var exception = assertThrows(ViolacaoIntegridade.class, () -> campeonatoService.salvar(new Campeonato(null, "LeMans", 2030)));
+        assertEquals("Ano inválido", exception.getMessage());
     }
 
     @Test
@@ -68,12 +78,38 @@ public class CampeonatoServiceTest extends BaseTests {
     }
 
     @Test
+    @DisplayName("Update campeonato inexistente")
+    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    void updateIdErrorTest() {
+        var exception = assertThrows(ObjetoNaoEncontrado.class, () -> campeonatoService.update(new Campeonato(10, "Indy", 2019)));
+        assertEquals("Campeonato 10 não encontrado", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Update campeonato data ERROR")
+    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    void updateDataErrorTest() {
+        var exception = assertThrows(ViolacaoIntegridade.class, () -> campeonatoService.update(new Campeonato(2, "Indy", 2030)));
+        assertEquals("Ano inválido!", exception.getMessage());
+    }
+
+    @Test
     @DisplayName("Delete campeonato")
     @Sql({"classpath:/resources/sqls/campeonato.sql"})
     void deleteTest() {
         campeonatoService.delete(2);
         List<Campeonato> lista = campeonatoService.listAll();
         assertEquals(2, lista.size());
+    }
+
+    @Test
+    @DisplayName("Delete campeonato ID ERROR")
+    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    void deleteIdErrorTest() {
+        var exception = assertThrows(ObjetoNaoEncontrado.class, () -> campeonatoService.delete(10));
+        assertEquals("Campeonato 10 não encontrado", exception.getMessage());
+        List<Campeonato> lista = campeonatoService.listAll();
+        assertEquals(3, lista.size());
     }
 
     @Test

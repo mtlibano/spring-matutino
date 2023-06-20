@@ -16,7 +16,7 @@ public class Campeonato {
     @Setter
     private Integer id;
 
-    @Column(name = "descricao_camp", unique = true)
+    @Column(name = "descricao_camp")
     private String descricao;
 
     @Column(name = "ano_camp")

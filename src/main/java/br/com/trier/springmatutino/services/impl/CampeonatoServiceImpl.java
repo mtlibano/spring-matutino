@@ -3,8 +3,12 @@ package br.com.trier.springmatutino.services.impl;
 import br.com.trier.springmatutino.domain.Campeonato;
 import br.com.trier.springmatutino.repositories.CampeonatoRepository;
 import br.com.trier.springmatutino.services.CampeonatoService;
+import br.com.trier.springmatutino.services.exceptions.ObjetoNaoEncontrado;
+import br.com.trier.springmatutino.services.exceptions.ViolacaoIntegridade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,33 +18,41 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     @Autowired
     CampeonatoRepository repository;
 
+    private void checkAno(Campeonato camp) {
+        if (camp.getAno() < 1990 && camp.getAno() > (LocalDate.now().getYear() + 1)) {
+            throw new ViolacaoIntegridade("Ano inválido!");
+        }
+    }
+
     @Override
     public Campeonato salvar(Campeonato campeonato) {
+        checkAno(campeonato);
         return repository.save(campeonato);
     }
 
     @Override
     public List<Campeonato> listAll() {
+        //implementar listall equipe
         return repository.findAll();
     }
 
     @Override
     public Campeonato findById(Integer id) {
         Optional<Campeonato> opt = repository.findById(id);
-        return opt.orElse(null);
+        return opt.orElseThrow(() -> new ObjetoNaoEncontrado("Campeonato %s não encontrado!".formatted(id)));
     }
 
     @Override
-    public Campeonato update(Campeonato equipe) {
-        return repository.save(equipe);
+    public Campeonato update(Campeonato campeonato) {
+        checkAno(campeonato);
+        repository.findById(campeonato.getId());
+        return repository.save(campeonato);
     }
 
     @Override
     public void delete(Integer id) {
         Campeonato camp = findById(id);
-        if (camp != null) {
-            repository.delete(camp);
-        }
+        repository.delete(camp);
     }
 
     @Override

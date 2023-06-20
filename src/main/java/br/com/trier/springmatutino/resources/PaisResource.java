@@ -59,8 +59,8 @@ public class PaisResource {
 	}
 
 	@GetMapping("/name/contains/{name}")
-	public ResponseEntity<List<Pais>> findByNameContains(@PathVariable String name) {
-		List<Pais> lista = service.findByNameContains(name);
+	public ResponseEntity<List<Pais>> findByNameContainsIgnoreCase(@PathVariable String name) {
+		List<Pais> lista = service.findByNameContainsIgnoreCase(name);
 		return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
 	}
 
