@@ -17,8 +17,21 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 
     @Autowired
     CampeonatoRepository repository;
+    
+    private void checkCampeonato(Campeonato camp) {
+    	if (camp == null) {
+    		throw new ViolacaoIntegridade("Campeonato nulo!");
+    	}
+    	if (camp.getDescricao() == null || camp.getDescricao().equals("")) {
+    		throw new ViolacaoIntegridade("Descricao nulo!");
+    	}
+    	checkAno(camp);
+    }
 
     private void checkAno(Campeonato camp) {
+    	if (camp.getAno() == null) {
+    		throw new ViolacaoIntegridade("Ano null!");
+    	}
         if (camp.getAno() < 1990 || camp.getAno() > (LocalDate.now().getYear() + 1)) {
             throw new ViolacaoIntegridade("Ano inválido!");
         }
@@ -26,7 +39,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 
     @Override
     public Campeonato salvar(Campeonato campeonato) {
-        checkAno(campeonato);
+        checkCampeonato(campeonato);
         return repository.save(campeonato);
     }
 
@@ -47,7 +60,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 
     @Override
     public Campeonato update(Campeonato campeonato) {
-        checkAno(campeonato);
+        checkCampeonato(campeonato);
         repository.findById(campeonato.getId());
         return repository.save(campeonato);
     }

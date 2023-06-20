@@ -46,6 +46,17 @@ public class CampeonatoServiceTest extends BaseTests {
         var lista = campeonatoService.listAll();
         assertEquals(3, lista.size());
     }
+    
+    @Test
+    @DisplayName("Listar todos VOID")
+    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    void listAllVoid() {
+    	campeonatoService.delete(1);
+    	campeonatoService.delete(2);
+    	campeonatoService.delete(3);
+    	var exception = assertThrows(ObjetoNaoEncontrado.class, () -> campeonatoService.listAll());
+        assertEquals("Void!", exception.getMessage());
+    }
 
     @Test
     @DisplayName("Cadastrar campeonato")
