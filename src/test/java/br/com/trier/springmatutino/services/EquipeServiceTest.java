@@ -57,7 +57,6 @@ public class EquipeServiceTest extends BaseTests {
         assertEquals("Void!", exception.getMessage());
     }
 
-
     @Test
     @DisplayName("Cadastrar equipe")
     void salvar() {

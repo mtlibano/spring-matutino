@@ -47,6 +47,17 @@ public class PaisServiceTest extends BaseTests {
 	}
 	
 	@Test
+	@DisplayName("Listar todos void")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+	void listAllVoid() {
+		paisService.delete(1);
+		paisService.delete(2);
+		paisService.delete(3);
+		var exception = assertThrows(ObjetoNaoEncontrado.class, () -> paisService.listAll());
+		assertEquals("Void!", exception.getMessage());
+	}
+	
+	@Test
 	@DisplayName("Cadastrar pais")
 	void salvar() {
 		Pais pais = paisService.salvar(new Pais(null, "Chile"));

@@ -6,7 +6,6 @@ import br.com.trier.springmatutino.services.EquipeService;
 import br.com.trier.springmatutino.services.exceptions.ObjetoNaoEncontrado;
 import br.com.trier.springmatutino.services.exceptions.ViolacaoIntegridade;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,9 +35,8 @@ public class EquipeServiceImpl implements EquipeService {
         List<Equipe> lista = repository.findAll();
         if (lista.isEmpty()) {
             throw new ObjetoNaoEncontrado("Void!");
-        } else {
-            return lista;
         }
+        return lista;
     }
 
     @Override

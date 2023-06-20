@@ -19,7 +19,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     CampeonatoRepository repository;
 
     private void checkAno(Campeonato camp) {
-        if (camp.getAno() < 1990 && camp.getAno() > (LocalDate.now().getYear() + 1)) {
+        if (camp.getAno() < 1990 || camp.getAno() > (LocalDate.now().getYear() + 1)) {
             throw new ViolacaoIntegridade("Ano inválido!");
         }
     }
@@ -32,8 +32,11 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 
     @Override
     public List<Campeonato> listAll() {
-        //implementar listall equipe
-        return repository.findAll();
+    	List<Campeonato> lista = repository.findAll();
+        if (lista.isEmpty()) {
+            throw new ObjetoNaoEncontrado("Void!");
+        }
+        return lista;
     }
 
     @Override

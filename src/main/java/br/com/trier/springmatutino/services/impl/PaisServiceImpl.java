@@ -31,7 +31,11 @@ public class PaisServiceImpl implements PaisService{
 
 	@Override
 	public List<Pais> listAll() {
-		return repository.findAll();
+		List<Pais> lista = repository.findAll();
+        if (lista.isEmpty()) {
+            throw new ObjetoNaoEncontrado("Void!");
+        }
+        return lista;
 	}
 
 	@Override
