@@ -22,7 +22,7 @@ public class CampeonatoServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Buscar campeonato por id")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void findByIdTest() {
         var campeonato = campeonatoService.findById(1);
         assertThat(campeonato).isNotNull();
@@ -33,7 +33,7 @@ public class CampeonatoServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Buscar campeonato por id inexistente")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void findByIdErrorTest() {
         var exception = assertThrows(ObjetoNaoEncontrado.class, () -> campeonatoService.findById(10));
         assertEquals("Campeonato 10 não encontrado!", exception.getMessage());
@@ -41,7 +41,7 @@ public class CampeonatoServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Listar todos")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void listAllTest() {
         var lista = campeonatoService.listAll();
         assertEquals(3, lista.size());
@@ -49,7 +49,7 @@ public class CampeonatoServiceTest extends BaseTests {
     
     @Test
     @DisplayName("Listar todos VOID")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void listAllVoid() {
     	campeonatoService.delete(1);
     	campeonatoService.delete(2);
@@ -73,12 +73,12 @@ public class CampeonatoServiceTest extends BaseTests {
     @DisplayName("Cadastrar campeonato data ERROR")
     void salvarDataErrorTest() {
         var exception = assertThrows(ViolacaoIntegridade.class, () -> campeonatoService.salvar(new Campeonato(null, "LeMans", 2030)));
-        assertEquals("Ano inválido", exception.getMessage());
+        assertEquals("Ano inválido!", exception.getMessage());
     }
 
     @Test
     @DisplayName("Update campeonato")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void updateTest() {
         Campeonato campeonato = campeonatoService.update(new Campeonato(2, "Nascar", 2021));
         assertThat(campeonato).isNotNull();
@@ -90,15 +90,15 @@ public class CampeonatoServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Update campeonato inexistente")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void updateIdErrorTest() {
         var exception = assertThrows(ObjetoNaoEncontrado.class, () -> campeonatoService.update(new Campeonato(10, "Indy", 2019)));
-        assertEquals("Campeonato 10 não encontrado", exception.getMessage());
+        assertEquals("Campeonato 10 não encontrado!", exception.getMessage());
     }
 
     @Test
     @DisplayName("Update campeonato data ERROR")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void updateDataErrorTest() {
         var exception = assertThrows(ViolacaoIntegridade.class, () -> campeonatoService.update(new Campeonato(2, "Indy", 2030)));
         assertEquals("Ano inválido!", exception.getMessage());
@@ -106,7 +106,7 @@ public class CampeonatoServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Delete campeonato")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void deleteTest() {
         campeonatoService.delete(2);
         List<Campeonato> lista = campeonatoService.listAll();
@@ -115,17 +115,17 @@ public class CampeonatoServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Delete campeonato ID ERROR")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void deleteIdErrorTest() {
         var exception = assertThrows(ObjetoNaoEncontrado.class, () -> campeonatoService.delete(10));
-        assertEquals("Campeonato 10 não encontrado", exception.getMessage());
+        assertEquals("Campeonato 10 não encontrado!", exception.getMessage());
         List<Campeonato> lista = campeonatoService.listAll();
         assertEquals(3, lista.size());
     }
 
     @Test
     @DisplayName("Buscar campeonato por nome")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void findByNameTest() {
         List<Campeonato> lista = campeonatoService.findByDescricaoIgnoreCase("formula1");
         assertEquals(1, lista.size());
@@ -135,7 +135,7 @@ public class CampeonatoServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Buscar campeonato por nome/contains")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void findByNameContainsIgnoreCaseTest() {
         List<Campeonato> lista = campeonatoService.findByDescricaoContainsIgnoreCase("Formula");
         assertEquals(2, lista.size());
@@ -143,7 +143,7 @@ public class CampeonatoServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Buscar campeonato por ano")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void findByAnoTest() {
         List<Campeonato> lista = campeonatoService.findByAno(2020);
         assertEquals(1, lista.size());
@@ -152,7 +152,7 @@ public class CampeonatoServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Buscar campeonato por intervalo de ano")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void findByAnoBetweenTest() {
         List<Campeonato> lista = campeonatoService.findByAnoBetween(2020, 2021);
         assertEquals(2, lista.size());
@@ -162,7 +162,7 @@ public class CampeonatoServiceTest extends BaseTests {
     
     @Test
     @DisplayName("Buscar campeonato por descricao e ano")
-    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    @Sql(scripts = "classpath:/resources/sqls/campeonato.sql")
     void findByDescricaoAndAno() {
         List<Campeonato> lista = campeonatoService.findByDescricaoIgnoreCaseAndAnoEquals("formula1", 2020);
         assertEquals(1, lista.size());

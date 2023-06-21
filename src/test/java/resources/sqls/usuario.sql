@@ -1,2 +1,2 @@
-insert into usuario(id_usuario, email_usuario, nome_usuario, senha_usuario) values (1, 'max@email.com', 'maxtest', '1234');
-insert into usuario(id_usuario, email_usuario, nome_usuario, senha_usuario) values (2, 'niki@email.com', 'nikitest', '1234');
+insert into usuario(id_usuario, nome_usuario, email_usuario, senha_usuario) values (1, 'max', 'max@email.com', '1234');
+insert into usuario(id_usuario, nome_usuario, email_usuario, senha_usuario) values (2, 'niki', 'niki@email.com', '1234');

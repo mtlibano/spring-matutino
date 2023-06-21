@@ -41,22 +41,21 @@ public class UserResourceTest {
 	
 	@SuppressWarnings("unused")
 	private ResponseEntity<List<UserDTO>> getUsers(String url) {
-		return rest.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<UserDTO>>() {
-		});
+		return rest.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<UserDTO>>() {});
 	}
 	
 	@Test
 	@DisplayName("Buscar por id")
-	public void testGetOk() {
+	public void testGetIdOk() {
 		ResponseEntity<UserDTO> response = getUser("/usuarios/1");
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
 		UserDTO user = response.getBody();
-		assertEquals("maxtest", user.getName());
+		assertEquals("max", user.getName());
 	}
 
 	@Test
 	@DisplayName("Buscar por id inexistente")
-	public void testGetNotFound() {
+	public void testGetIdNotFound() {
 		ResponseEntity<UserDTO> response = getUser("/usuarios/100");
 		assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
 	}
@@ -102,8 +101,40 @@ public class UserResourceTest {
                 null,
                 Void.class,
                 1);
-        assertEquals(responseEntity.getStatusCode(), HttpStatus.NO_CONTENT);
+        assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+        
+        ResponseEntity<List<UserDTO>> responseEntityList = rest.exchange(
+				"/usuarios",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<UserDTO>>() {}
+        );
+		assertEquals(responseEntityList.getStatusCode(), HttpStatus.OK);
+		List<UserDTO> users = responseEntityList.getBody();
+	    assertEquals(1, users.size());
 	}
 	
+	@Test
+	@DisplayName("Buscar por Nome")
+	public void testGetNameOk() {
+		ResponseEntity<UserDTO> response = getUser("/usuarios/name/max");
+		assertEquals(response.getStatusCode(), HttpStatus.OK);
+		UserDTO user = response.getBody();
+		assertEquals("max", user.getName());
+	}
+	
+	@Test
+	@DisplayName("Buscar por Nome ERROR")
+	public void testGetNameError() {
+		ResponseEntity<UserDTO> responseEntity = rest.exchange(
+                "/usuarios/name/max",
+                HttpMethod.GET,
+                null,
+                UserDTO.class);
+        assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+        
+        UserDTO user = responseEntity.getBody();
+		assertEquals("max", user.getName());
+	}
 
 }

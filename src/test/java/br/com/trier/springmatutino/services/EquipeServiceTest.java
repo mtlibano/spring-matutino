@@ -22,7 +22,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Buscar equipe por id")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void findByIdTest() {
         var equipe = equipeService.findById(1);
         assertThat(equipe).isNotNull();
@@ -32,7 +32,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Buscar equipe por id inexistente")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void findByIdInexistenteTest() {
         var exception = assertThrows(ObjetoNaoEncontrado.class, () -> equipeService.findById(10));
         assertEquals("Equipe 10 não encontrada!", exception.getMessage());
@@ -40,7 +40,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Listar todos")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void listAll() {
         var lista = equipeService.listAll();
         assertEquals(3, lista.size());
@@ -48,7 +48,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Listar todos vazio")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void listAllVazio() {
         equipeService.delete(1);
         equipeService.delete(2);
@@ -77,7 +77,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Update equipe")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void updateTest() {
         Equipe equipe = equipeService.update(new Equipe(2, "Ferrari"));
         assertThat(equipe).isNotNull();
@@ -88,7 +88,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Update equipe existente")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void updateExistenteTest() {
         var exception = assertThrows(ViolacaoIntegridade.class, () -> equipeService.update(new Equipe(2, "RedBull")));
         assertEquals("Equipe já cadastrada! RedBull", exception.getMessage());
@@ -96,7 +96,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Update equipe inexistente")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void updateInexistenteTest() {
         var exception = assertThrows(ObjetoNaoEncontrado.class, () -> equipeService.update(new Equipe(10, "Ferrari")));
         assertEquals("Equipe 10 não encontrada!", exception.getMessage());
@@ -104,7 +104,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Delete equipe")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void deleteTest() {
         equipeService.delete(2);
         List<Equipe> lista = equipeService.listAll();
@@ -113,7 +113,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Delete equipe inexistente")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void deleteInexistenteTest() {
         var exception = assertThrows(ObjetoNaoEncontrado.class, () -> equipeService.delete(10));
         assertEquals("Equipe 10 não encontrada!", exception.getMessage());
@@ -123,7 +123,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Buscar equipe por nome")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void findByNameTest() {
         List<Equipe> lista = equipeService.findByNameIgnoreCase("mercedez");
         assertEquals(1, lista.size());
@@ -133,7 +133,7 @@ public class EquipeServiceTest extends BaseTests {
 
     @Test
     @DisplayName("Buscar equipe por nome/contains")
-    @Sql({"classpath:/resources/sqls/equipe.sql"})
+    @Sql(scripts =  "classpath:/resources/sqls/equipe.sql")
     void findByNameContainsTest() {
         List<Equipe> lista = equipeService.findByNameContainsIgnoreCase("mc");
         assertEquals(1, lista.size());

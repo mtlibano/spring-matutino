@@ -61,7 +61,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     @Override
     public Campeonato update(Campeonato campeonato) {
         checkCampeonato(campeonato);
-        repository.findById(campeonato.getId());
+        findById(campeonato.getId());
         return repository.save(campeonato);
     }
 
