@@ -18,10 +18,11 @@ public class Piloto {
 
     @Column(name = "nome_piloto")
     private String name;
+    
+    @ManyToOne
+    private Equipe equipe;
 
-    @Column(name = "id_equipe")
-    private Integer id_equipe;
-
-    @Column(name = "id_pais")
-    private Integer id_pais;
+    @ManyToOne
+    private Pais pais;
+    
 }

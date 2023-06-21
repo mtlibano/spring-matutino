@@ -20,10 +20,10 @@ public class Corrida {
     @Column(name = "data_corrida")
     private Date data;
 
-    @Column(name = "id_pista")
-    private Integer id_pista;
+    @ManyToOne
+    private Pista pista;
 
-    @Column(name = "id_camp")
-    private Integer id_camp;
+    @ManyToOne
+    private Campeonato campeonato;
 
 }

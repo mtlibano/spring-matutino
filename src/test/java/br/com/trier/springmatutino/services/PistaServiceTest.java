@@ -1,6 +1,7 @@
 package br.com.trier.springmatutino.services;
 
 import br.com.trier.springmatutino.BaseTests;
+import br.com.trier.springmatutino.domain.Pais;
 import br.com.trier.springmatutino.domain.Pista;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +26,6 @@ public class PistaServiceTest extends BaseTests {
         assertThat(pista).isNotNull();
         assertEquals(1, pista.getId());
         assertEquals(1000, pista.getTamanho());
-        assertEquals(1, pista.getId_pais());
     }
 
     @Test
@@ -47,24 +47,24 @@ public class PistaServiceTest extends BaseTests {
     @Test
     @DisplayName("Cadastrar pista")
     void salvar() {
-        Pista pista = pistaService.salvar(new Pista(null, 4000, 1));
+        Pista pista = pistaService.salvar(new Pista(null, 4000, (new Pais(4, "Peru"))));
         assertThat(pista).isNotNull();
         var pistaTest = pistaService.findById(1);
         assertEquals(1, pistaTest.getId());
         assertEquals(4000, pistaTest.getTamanho());
-        assertEquals(1, pistaTest.getId_pais());
+        assertEquals("Peru", pistaTest.getPais().getName());
     }
 
     @Test
     @DisplayName("Update pista")
     @Sql({"classpath:/resources/sqls/pista.sql"})
     void updateTest() {
-        Pista pista = pistaService.update(new Pista(2, 5000, 3));
+        Pista pista = pistaService.update(new Pista(2, 5000, (new Pais(4, "Peru"))));
         assertThat(pista).isNotNull();
         var pistaTest = pistaService.findById(2);
         assertEquals(2, pistaTest.getId());
         assertEquals(5000, pistaTest.getTamanho());
-        assertEquals(3, pistaTest.getId_pais());
+        assertEquals("Peru", pistaTest.getPais().getName());
     }
 
     @Test

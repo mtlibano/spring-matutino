@@ -19,7 +19,7 @@ public class Pista {
     @Column(name = "tamanho_pista")
     private Integer tamanho;
 
-    @Column(name = "id_pais")
-    private Integer id_pais;
+    @ManyToOne
+    private Pais pais;
 
 }
