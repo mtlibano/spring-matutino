@@ -85,7 +85,7 @@ public class CorridaServiceTest extends BaseTests{
     @Sql({"classpath:/resources/sqls/pista.sql"})
     @Sql({"classpath:/resources/sqls/campeonato.sql"})
     void testSalvarCorrida() {
-    	ZonedDateTime data = ZonedDateTime.of(2023, 10, 10, 10, 0, 0, 0, ZoneId.systemDefault());
+    	ZonedDateTime data = ZonedDateTime.of(2020, 10, 10, 10, 0, 0, 0, ZoneId.systemDefault());
     	Pista pista = pistaService.findById(1);
     	Campeonato campeonato = campeonatoService.findById(1);
         Corrida corrida = corridaService.salvar(new Corrida(null, data, pista, campeonato));
@@ -97,16 +97,40 @@ public class CorridaServiceTest extends BaseTests{
     }
     
     @Test
-    @DisplayName("Cadastrar corrida data Error")
+    @DisplayName("Cadastrar corrida data null error")
 	@Sql({"classpath:/resources/sqls/pais.sql"})
     @Sql({"classpath:/resources/sqls/pista.sql"})
     @Sql({"classpath:/resources/sqls/campeonato.sql"})
-    void testSalvarCorridaError() {
-    	ZonedDateTime data = ZonedDateTime.of(2022, 6, 10, 10, 0, 0, 0, ZoneId.systemDefault());
+    void testSalvarCorridaDataNull() {
+    	Pista pista = pistaService.findById(1);
+    	Campeonato campeonato = campeonatoService.findById(1);
+        var exception = assertThrows(ViolacaoIntegridade.class, () -> corridaService.salvar(new Corrida(null, null, pista, campeonato)));
+        assertEquals("Data inválida!", exception.getMessage());
+    }
+    
+    @Test
+    @DisplayName("Cadastrar corrida campeonato null error")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+    @Sql({"classpath:/resources/sqls/pista.sql"})
+    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    void testSalvarCorridaCampeonatoNull() {
+    	ZonedDateTime data = ZonedDateTime.of(2020, 10, 10, 10, 0, 0, 0, ZoneId.systemDefault());
+    	Pista pista = pistaService.findById(1);
+        var exception = assertThrows(ViolacaoIntegridade.class, () -> corridaService.salvar(new Corrida(null, data, pista, null)));
+        assertEquals("Campeonato null!", exception.getMessage());
+    }
+    
+    @Test
+    @DisplayName("Cadastrar corrida data diferente ano campeonato Error")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+    @Sql({"classpath:/resources/sqls/pista.sql"})
+    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+    void testSalvarCorridaDiferenteAnoCampeonatoError() {
+    	ZonedDateTime data = ZonedDateTime.of(2023, 10, 10, 10, 0, 0, 0, ZoneId.systemDefault());
     	Pista pista = pistaService.findById(1);
     	Campeonato campeonato = campeonatoService.findById(1);
         var exception = assertThrows(ViolacaoIntegridade.class, () -> corridaService.salvar(new Corrida(null, data, pista, campeonato)));
-        assertEquals("Data inválida!", exception.getMessage());
+        assertEquals("Data deve ser igual ao ano do campeonato!", exception.getMessage());
     }
 
     @Test
@@ -116,7 +140,7 @@ public class CorridaServiceTest extends BaseTests{
     @Sql({"classpath:/resources/sqls/campeonato.sql"})
 	@Sql({"classpath:/resources/sqls/corrida.sql"})
     void testUpdate() {
-    	ZonedDateTime data = ZonedDateTime.of(2023, 10, 10, 10, 0, 0, 0, ZoneId.systemDefault());
+    	ZonedDateTime data = ZonedDateTime.of(2020, 10, 10, 10, 0, 0, 0, ZoneId.systemDefault());
     	Pista pista = pistaService.findById(1);
     	Campeonato campeonato = campeonatoService.findById(1);
         Corrida corrida = corridaService.update(new Corrida(2, data, pista, campeonato));
@@ -160,7 +184,7 @@ public class CorridaServiceTest extends BaseTests{
     @Sql({"classpath:/resources/sqls/campeonato.sql"})
 	@Sql({"classpath:/resources/sqls/corrida.sql"})
     void testFindByData() {
-    	ZonedDateTime data = ZonedDateTime.of(2023, 10, 02, 10, 0, 0, 0, ZoneId.systemDefault());
+    	ZonedDateTime data = ZonedDateTime.of(2020, 10, 02, 10, 0, 0, 0, ZoneId.systemDefault());
         List<Corrida> lista = corridaService.findByData(data);
         assertEquals(1, lista.size());
     }
@@ -175,6 +199,32 @@ public class CorridaServiceTest extends BaseTests{
     	ZonedDateTime data = ZonedDateTime.of(2022, 10, 10, 10, 0, 0, 0, ZoneId.systemDefault());
         var exception = assertThrows(ObjetoNaoEncontrado.class, () -> corridaService.findByData(data));
         assertEquals("Nenhuma corrida na data: 2022-10-10T10:00-03:00[America/Sao_Paulo]", exception.getMessage());
+    }
+    
+    @Test
+    @DisplayName("Listar por intervalo data")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+    @Sql({"classpath:/resources/sqls/pista.sql"})
+    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+	@Sql({"classpath:/resources/sqls/corrida.sql"})
+    void testFindByDataBetween() {
+    	ZonedDateTime dataInicial = ZonedDateTime.of(2020, 10, 01, 10, 0, 0, 0, ZoneId.systemDefault());
+    	ZonedDateTime dataFinal = ZonedDateTime.of(2020, 10, 04, 10, 0, 0, 0, ZoneId.systemDefault());
+        List<Corrida> lista = corridaService.findByDataBetween(dataInicial, dataFinal);
+        assertEquals(2, lista.size());
+    }
+    
+    @Test
+    @DisplayName("Listar por intervalo data ERROR")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+    @Sql({"classpath:/resources/sqls/pista.sql"})
+    @Sql({"classpath:/resources/sqls/campeonato.sql"})
+	@Sql({"classpath:/resources/sqls/corrida.sql"})
+    void testFindByDataBetweenError() {
+    	ZonedDateTime dataInicial = ZonedDateTime.of(2023, 10, 06, 10, 0, 0, 0, ZoneId.systemDefault());
+    	ZonedDateTime dataFinal = ZonedDateTime.of(2023, 10, 10, 10, 0, 0, 0, ZoneId.systemDefault());
+        var exception = assertThrows(ObjetoNaoEncontrado.class, () -> corridaService.findByDataBetween(dataInicial, dataFinal));
+        assertEquals("Nenhuma corrida no intervalo de data: 2023-10-06T10:00-03:00[America/Sao_Paulo] e 2023-10-10T10:00-03:00[America/Sao_Paulo]", exception.getMessage());
     }
     
     @Test

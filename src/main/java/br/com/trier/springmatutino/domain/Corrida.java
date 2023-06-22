@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.ZonedDateTime;
 
 import br.com.trier.springmatutino.domain.dto.CorridaDTO;
+import br.com.trier.springmatutino.utils.DateUtils;
 
 @Getter
 @NoArgsConstructor
@@ -29,12 +30,19 @@ public class Corrida {
     @ManyToOne
     private Campeonato campeonato;
     
-    public Corrida(CorridaDTO dto) {
-    	this(dto.getId(), dto.getData(), dto.getPista(), dto.getCampeonato());
+	//String newDate = this.data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z"));
+    
+    public Corrida (CorridaDTO dto, Pista pista, Campeonato campeonato) {
+    	this (dto.getId(), 
+    			DateUtils.strToZonedDateTime(dto.getData()), 
+    			pista,
+    			campeonato);
     }
     
-    public CorridaDTO toDto() {
-    	return new CorridaDTO(this.id, this.data, this.pista, this.campeonato);
+    public CorridaDTO toDTO() {
+    	return new CorridaDTO(id, DateUtils.zonedDateTimeToStr(data), 
+    			pista.getId(), pista.getTamanho(),
+    			campeonato.getId(), campeonato.getDescricao());
     }
 
 }

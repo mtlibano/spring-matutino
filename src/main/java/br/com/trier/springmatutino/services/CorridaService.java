@@ -15,6 +15,7 @@ public interface CorridaService {
     Corrida update(Corrida corrida);
     void delete(Integer id);
 	List<Corrida> findByData(ZonedDateTime data);
+	List<Corrida> findByDataBetween(ZonedDateTime dataInicial, ZonedDateTime dataFinal);
 	List<Corrida> findByPista(Pista pista);
 	List<Corrida> findByCampeonato(Campeonato campeonato);
     

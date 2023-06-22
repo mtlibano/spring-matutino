@@ -19,16 +19,9 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     CampeonatoRepository repository;
     
     private void checkCampeonato(Campeonato camp) {
-    	if (camp == null) {
-    		throw new ViolacaoIntegridade("Campeonato nulo!");
-    	}
     	if (camp.getDescricao() == null || camp.getDescricao().equals("")) {
-    		throw new ViolacaoIntegridade("Descricao nulo!");
+    		throw new ViolacaoIntegridade("Descricao null!");
     	}
-    	checkAno(camp);
-    }
-
-    private void checkAno(Campeonato camp) {
     	if (camp.getAno() == null) {
     		throw new ViolacaoIntegridade("Ano null!");
     	}

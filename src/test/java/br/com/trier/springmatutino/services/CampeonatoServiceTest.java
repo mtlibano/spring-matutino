@@ -68,7 +68,21 @@ public class CampeonatoServiceTest extends BaseTests {
         assertEquals("LeMans", campeonatoTest.getDescricao());
         assertEquals(2023, campeonatoTest.getAno());
     }
-
+    
+    @Test
+    @DisplayName("Cadastrar campeonato descricao NULL")
+    void salvarDescricaoNullTest() {
+        var exception = assertThrows(ViolacaoIntegridade.class, () -> campeonatoService.salvar(new Campeonato(null, null, 2030)));
+        assertEquals("Descricao null!", exception.getMessage());
+    }
+    
+    @Test
+    @DisplayName("Cadastrar campeonato data NULL")
+    void salvarDataNullTest() {
+        var exception = assertThrows(ViolacaoIntegridade.class, () -> campeonatoService.salvar(new Campeonato(null, "LeMans", null)));
+        assertEquals("Ano null!", exception.getMessage());
+    }
+    
     @Test
     @DisplayName("Cadastrar campeonato data ERROR")
     void salvarDataErrorTest() {

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface CorridaRepository extends JpaRepository<Corrida, Integer> {
 	
 	List<Corrida> findByData(ZonedDateTime data);
+	List<Corrida> findByDataBetween(ZonedDateTime dataInicial, ZonedDateTime dataFinal);
 	List<Corrida> findByPista(Pista pista);
 	List<Corrida> findByCampeonato(Campeonato campeonato);
 

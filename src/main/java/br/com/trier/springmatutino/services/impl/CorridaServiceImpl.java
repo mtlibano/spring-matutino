@@ -21,8 +21,14 @@ public class CorridaServiceImpl implements CorridaService {
 	CorridaRepository repository;
 
 	private void checkCorrida(Corrida corrida) {
-		if (corrida.getData().isBefore(ZonedDateTime.now())) {
+		if (corrida.getData() == null) {
 			throw new ViolacaoIntegridade("Data inválida!");
+		}
+		if (corrida.getCampeonato() == null) {
+			throw new ViolacaoIntegridade("Campeonato null!");
+		}
+		if (corrida.getData().getYear() != corrida.getCampeonato().getAno()) {
+			throw new ViolacaoIntegridade("Data deve ser igual ao ano do campeonato!");
 		}
 	}
 
@@ -64,6 +70,15 @@ public class CorridaServiceImpl implements CorridaService {
 		List<Corrida> list = repository.findByData(data);
 		if (list.isEmpty()) {
 			throw new ObjetoNaoEncontrado("Nenhuma corrida na data: %s".formatted(data));
+		}
+		return list;
+	}
+
+	@Override
+	public List<Corrida> findByDataBetween(ZonedDateTime dataInicial, ZonedDateTime dataFinal) {
+		List<Corrida> list = repository.findByDataBetween(dataInicial, dataFinal);
+		if (list.isEmpty()) {
+			throw new ObjetoNaoEncontrado("Nenhuma corrida no intervalo de data: %s e %s".formatted(dataInicial, dataFinal));
 		}
 		return list;
 	}
