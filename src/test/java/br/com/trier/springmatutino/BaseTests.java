@@ -36,5 +36,15 @@ public class BaseTests {
 	public PistaService pistaService() {
 		return new PistaServiceImpl();
 	}
+	
+	@Bean
+	public PilotoService pilotoService() {
+		return new PilotoServiceImpl();
+	}
+	
+	@Bean
+	public CorridaService corridaService() {
+		return new CorridaServiceImpl();
+	}
 
 }

@@ -1,13 +1,13 @@
 package br.com.trier.springmatutino.resources;
 
 import br.com.trier.springmatutino.domain.Piloto;
+import br.com.trier.springmatutino.domain.dto.PilotoDTO;
 import br.com.trier.springmatutino.services.EquipeService;
 import br.com.trier.springmatutino.services.PaisService;
 import br.com.trier.springmatutino.services.PilotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -24,28 +24,32 @@ public class PilotoResource {
     EquipeService equipeService;
 
     @PostMapping
-    public ResponseEntity<Piloto> insert(@RequestBody Piloto piloto) {
+    public ResponseEntity<PilotoDTO> insert(@RequestBody PilotoDTO piloto) {
     	paisService.findById(piloto.getPais().getId());
     	equipeService.findById(piloto.getEquipe().getId());
-        return ResponseEntity.ok(service.salvar(piloto));
+    	Piloto newPiloto = service.salvar(new Piloto(piloto));
+        return ResponseEntity.ok(newPiloto.toDto());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Piloto> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<PilotoDTO> findById(@PathVariable Integer id) {
+        Piloto piloto = service.findById(id);
+    	return ResponseEntity.ok(piloto.toDto());
     }
 
     @GetMapping
-    public ResponseEntity<List<Piloto>> listAll() {
-        return ResponseEntity.ok(service.listtAll());
+    public ResponseEntity<List<PilotoDTO>> listAll() {
+        return ResponseEntity.ok(service.listAll().stream().map(piloto -> piloto.toDto()).toList());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Piloto> update(@PathVariable Integer id, @RequestBody Piloto piloto) {
-    	paisService.findById(piloto.getPais().getId());
-    	equipeService.findById(piloto.getEquipe().getId());
+    public ResponseEntity<PilotoDTO> update(@PathVariable Integer id, @RequestBody PilotoDTO pilotoDto) {
+    	paisService.findById(pilotoDto.getPais().getId());
+    	equipeService.findById(pilotoDto.getEquipe().getId());
+    	Piloto piloto = new Piloto(pilotoDto);
         piloto.setId(id);
-        return ResponseEntity.ok(service.update(piloto));
+        piloto = service.update(piloto);
+        return ResponseEntity.ok(piloto.toDto());
     }
 
     @DeleteMapping("/{id}")
@@ -55,18 +59,18 @@ public class PilotoResource {
     }
     
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<Piloto>> findByName(@PathVariable String name) {
-        return ResponseEntity.ok(service.findByName(name).stream().map(piloto -> piloto).toList());
+    public ResponseEntity<List<PilotoDTO>> findByNameIgnoreCase(@PathVariable String name) {
+        return ResponseEntity.ok(service.findByNameIgnoreCase(name).stream().map(piloto -> piloto.toDto()).toList());
     }
     
     @GetMapping("/pais/{idPais}")
-    public ResponseEntity<List<Piloto>> findByPilotoPais(@PathVariable Integer idPais) {
-        return ResponseEntity.ok(service.findByPilotoPais(paisService.findById(idPais)));
+    public ResponseEntity<List<PilotoDTO>> findByPaisOrderByNameDesc(@PathVariable Integer idPais) {
+        return ResponseEntity.ok(service.findByPaisOrderByNameDesc(paisService.findById(idPais)).stream().map(piloto -> piloto.toDto()).toList());
     }
     
     @GetMapping("/equipe/{idEquipe}")
-    public ResponseEntity<List<Piloto>> findByPilotoEquipe(@PathVariable Integer idEquipe) {
-        return ResponseEntity.ok(service.findByPilotoEquipe(equipeService.findById(idEquipe)));
+    public ResponseEntity<List<PilotoDTO>> findByEquipeOrderByNameDesc(@PathVariable Integer idEquipe) {
+        return ResponseEntity.ok(service.findByEquipeOrderByNameDesc(equipeService.findById(idEquipe)).stream().map(piloto -> piloto.toDto()).toList());
     }
 
 }

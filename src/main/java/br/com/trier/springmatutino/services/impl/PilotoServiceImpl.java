@@ -20,8 +20,8 @@ public class PilotoServiceImpl implements PilotoService {
     PilotoRepository repository;
     
     public void checkPiloto(Piloto piloto) {
-    	if (piloto == null) {
-    		throw new ViolacaoIntegridade("Piloto null!");
+    	if (piloto.getName() == null) {
+    		throw new ViolacaoIntegridade("Nome piloto null!");
     	}
     }
 
@@ -37,7 +37,7 @@ public class PilotoServiceImpl implements PilotoService {
     }
     
     @Override
-    public List<Piloto> listtAll() {
+    public List<Piloto> listAll() {
         List<Piloto> list = repository.findAll();
         if (list.isEmpty()) {
         	throw new ObjetoNaoEncontrado("Nenhum piloto cadastrado!");
@@ -55,14 +55,12 @@ public class PilotoServiceImpl implements PilotoService {
     @Override
     public void delete(Integer id) {
         Piloto piloto = findById(id);
-        if (piloto != null) {
-            repository.delete(piloto);
-        }
+        repository.delete(piloto);
     }
 
 	@Override
-	public List<Piloto> findByName(String name) {
-		List<Piloto> list = repository.findByName(name);
+	public List<Piloto> findByNameIgnoreCase(String name) {
+		List<Piloto> list = repository.findByNameIgnoreCase(name);
 		if (list.isEmpty()) {
 			throw new ObjetoNaoEncontrado("Nenhum piloto com o nome: %s".formatted(name));
 		}
@@ -70,8 +68,8 @@ public class PilotoServiceImpl implements PilotoService {
 	}
 
 	@Override
-	public List<Piloto> findByPilotoPais(Pais pais) {
-		List<Piloto> list = repository.findByPilotoPais(pais);
+	public List<Piloto> findByPaisOrderByNameDesc(Pais pais) {
+		List<Piloto> list = repository.findByPaisOrderByNameDesc(pais);
 		if (list.isEmpty()) {
 			throw new ObjetoNaoEncontrado("Nenhum piloto do país: %s".formatted(pais.getName()));
 		}
@@ -79,12 +77,12 @@ public class PilotoServiceImpl implements PilotoService {
 	}
 
 	@Override
-	public List<Piloto> findByPilotoEquipe(Equipe equipe) {
-		List<Piloto> list = repository.findByPilotoEquipe(equipe);
+	public List<Piloto> findByEquipeOrderByNameDesc(Equipe equipe) {
+		List<Piloto> list = repository.findByEquipeOrderByNameDesc(equipe);
 		if (list.isEmpty()) {
 			throw new ObjetoNaoEncontrado("Nenhum piloto da equipe: %s".formatted(equipe.getName()));
 		}
 		return list;
 	}
-
+	
 }

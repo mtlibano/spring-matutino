@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PilotoRepository extends JpaRepository<Piloto, Integer> {
 	
-	List<Piloto> findByName(String name);
-	List<Piloto> findByPilotoPais(Pais pais);
-	List<Piloto> findByPilotoEquipe(Equipe equipe);
+	List<Piloto> findByNameIgnoreCase(String name);
+	List<Piloto> findByPaisOrderByNameDesc(Pais pais);
+	List<Piloto> findByEquipeOrderByNameDesc(Equipe equipe);
 
 }

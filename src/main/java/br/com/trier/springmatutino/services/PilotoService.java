@@ -10,11 +10,11 @@ public interface PilotoService {
 
     Piloto salvar(Piloto piloto);
     Piloto findById(Integer id);
-    List<Piloto> listtAll();
+    List<Piloto> listAll();
     Piloto update(Piloto piloto);
     void delete(Integer id);
-    List<Piloto> findByName(String name);
-    List<Piloto> findByPilotoPais(Pais pais);
-	List<Piloto> findByPilotoEquipe(Equipe equipe);
+    List<Piloto> findByNameIgnoreCase(String name);
+	List<Piloto> findByPaisOrderByNameDesc(Pais pais);
+	List<Piloto> findByEquipeOrderByNameDesc(Equipe equipe);
 
 }

@@ -1,5 +1,6 @@
 package br.com.trier.springmatutino.domain;
 
+import br.com.trier.springmatutino.domain.dto.PilotoDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,5 +25,13 @@ public class Piloto {
 
     @ManyToOne
     private Pais pais;
+    
+    public Piloto(PilotoDTO dto) {
+    	this(dto.getId(), dto.getName(), dto.getEquipe(), dto.getPais());
+    }
+    
+    public PilotoDTO toDto() {
+    	return new PilotoDTO(this.id, this.name, this.equipe, this.pais);
+    }
     
 }

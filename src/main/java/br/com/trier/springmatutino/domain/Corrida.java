@@ -2,7 +2,10 @@ package br.com.trier.springmatutino.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Date;
+
+import java.time.ZonedDateTime;
+
+import br.com.trier.springmatutino.domain.dto.CorridaDTO;
 
 @Getter
 @NoArgsConstructor
@@ -18,12 +21,20 @@ public class Corrida {
     private Integer id;
 
     @Column(name = "data_corrida")
-    private Date data;
+    private ZonedDateTime data;
 
     @ManyToOne
     private Pista pista;
 
     @ManyToOne
     private Campeonato campeonato;
+    
+    public Corrida(CorridaDTO dto) {
+    	this(dto.getId(), dto.getData(), dto.getPista(), dto.getCampeonato());
+    }
+    
+    public CorridaDTO toDto() {
+    	return new CorridaDTO(this.id, this.data, this.pista, this.campeonato);
+    }
 
 }

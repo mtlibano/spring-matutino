@@ -31,7 +31,7 @@ public class PistaServiceImpl implements PistaService {
 
     @Override
     public Pista findById(Integer id) {
-    	return repository.findById(id).orElseThrow(() -> new ObjetoNaoEncontrado("Pista id %s não existe".formatted(id)));
+    	return repository.findById(id).orElseThrow(() -> new ObjetoNaoEncontrado("Pista ID %s não existe".formatted(id)));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class PistaServiceImpl implements PistaService {
 	public List<Pista> findByPaisOrderByTamanhoDesc(Pais pais) {
 		List<Pista> lista = repository.findByPaisOrderByTamanhoDesc(pais);
     	if (lista.isEmpty()) {
-    		throw new ObjetoNaoEncontrado("Nenhuma pista no pais %s".formatted(pais.getName()));
+    		throw new ObjetoNaoEncontrado("Nenhuma pista no %s".formatted(pais.getName()));
     	}
         return lista;
 	}
