@@ -7,13 +7,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PilotoDTO {
+public class PilotoCorridaDTO {
 	
-	private Integer id;	
-	private String name;	
-	private Integer idEquipe;
-	private String nameEquipe;
-	private Integer idPais;
-	private String namePais;
+	private Integer id;
+	private Integer colocacao;
+	private Integer idPiloto;
+	private String namePiloto;
+	private Integer idCorrida;
 
 }

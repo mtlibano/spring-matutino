@@ -30,19 +30,22 @@ public class Corrida {
     @ManyToOne
     private Campeonato campeonato;
     
-	//String newDate = this.data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z"));
-    
-    public Corrida (CorridaDTO dto, Pista pista, Campeonato campeonato) {
-    	this (dto.getId(), 
-    			DateUtils.strToZonedDateTime(dto.getData()), 
-    			pista,
-    			campeonato);
-    }
-    
     public CorridaDTO toDTO() {
-    	return new CorridaDTO(id, DateUtils.zonedDateTimeToStr(data), 
-    			pista.getId(), pista.getTamanho(),
-    			campeonato.getId(), campeonato.getDescricao());
-    }
-
+		return  new CorridaDTO(id, DateUtils.zonedDateTimeToStr(data), pista.getId(), pista.getTamanho(), campeonato.getId(), campeonato.getDescricao());
+	}
+	
+	public Corrida(CorridaDTO dto) {
+		 this(dto.getId(),
+				 DateUtils.strToZonedDateTime(dto.getData()),
+				 new Pista(dto.getPistaId(), null, null),
+				 new Campeonato(dto.getCampeonatoId(), null, null));
+	}
+	
+	public Corrida(CorridaDTO dto, Pista pista, Campeonato campeonato) {
+		 this(dto.getId(),
+				 DateUtils.strToZonedDateTime(dto.getData()),
+				 pista,
+				 campeonato);
+	}
+	
 }

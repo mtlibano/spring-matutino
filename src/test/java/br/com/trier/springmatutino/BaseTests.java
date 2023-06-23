@@ -46,5 +46,10 @@ public class BaseTests {
 	public CorridaService corridaService() {
 		return new CorridaServiceImpl();
 	}
+	
+	@Bean
+	public PilotoCorridaService pilotoCorridaService() {
+		return new PilotoCorridaServiceImpl();
+	}
 
 }

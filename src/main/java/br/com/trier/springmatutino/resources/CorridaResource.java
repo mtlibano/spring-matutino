@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -29,16 +28,16 @@ public class CorridaResource {
 
     @PostMapping
     public ResponseEntity<CorridaDTO> insert(@RequestBody CorridaDTO corridaDTO) {
-    	pistaService.findById(corridaDTO.getPistaId());
-    	campeonatoService.findById(corridaDTO.getCampeonatoId());
-    	Corrida newCorrida = service.salvar(new Corrida(corridaDTO));
-        return ResponseEntity.ok(newCorrida.toDTO());
+    	return ResponseEntity.ok(service.salvar(new Corrida(
+    			corridaDTO,
+    			pistaService.findById(corridaDTO.getPistaId()),
+    			campeonatoService.findById(corridaDTO.getCampeonatoId())))
+    			.toDTO());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CorridaDTO> findById(@PathVariable Integer id) {
-    	Corrida corrida = service.findById(id);
-    	return ResponseEntity.ok(corrida.toDTO());
+    	return ResponseEntity.ok(service.findById(id).toDTO());
     }
 
     @GetMapping
@@ -47,10 +46,10 @@ public class CorridaResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CorridaDTO> update(@PathVariable Integer id, @RequestBody CorridaDTO corridaDto) {
-    	pistaService.findById(corridaDto.getPistaId());
-    	campeonatoService.findById(corridaDto.getCampeonatoId());
-    	Corrida corrida = new Corrida(corridaDto);
+    public ResponseEntity<CorridaDTO> update(@PathVariable Integer id, @RequestBody CorridaDTO corridaDTO) {
+    	pistaService.findById(corridaDTO.getPistaId());
+    	campeonatoService.findById(corridaDTO.getCampeonatoId());
+    	Corrida corrida = new Corrida(corridaDTO);
         corrida.setId(id);
         corrida = service.update(corrida);
         return ResponseEntity.ok(corrida.toDTO());
@@ -68,8 +67,8 @@ public class CorridaResource {
     }
     
     @GetMapping("/data/{dataInicial}/{dataFinal}")
-    public ResponseEntity<List<CorridaDTO>> findByDataBetween(@PathVariable ZonedDateTime dataInicial, @PathVariable ZonedDateTime dataFinal) {
-        return ResponseEntity.ok(service.findByDataBetween(dataInicial, dataFinal).stream().map(corrida -> corrida.toDTO()).toList());
+    public ResponseEntity<List<CorridaDTO>> findByDataBetween(@PathVariable String dataInicial, @PathVariable String dataFinal) {
+        return ResponseEntity.ok(service.findByDataBetween(DateUtils.strToZonedDateTime(dataInicial), DateUtils.strToZonedDateTime(dataFinal)).stream().map(corrida -> corrida.toDTO()).toList());
     }
     
     @GetMapping("/pista/{idPista}")
