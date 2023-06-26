@@ -88,13 +88,10 @@ public class ReportResource {
 			try {
 				if (corrida.getCampeonato().getId() == idCampeonato)
 					pistas.add(corrida.getPista());
-			} catch (ObjetoNaoEncontrado e) {
-				// FIXME verificar tratamento adequado
-			}
+			} catch (ObjetoNaoEncontrado e) {}
 		}
 
-		PistaCampeonatoIdDTO pistaCampeonatoIdDTO = new PistaCampeonatoIdDTO(campeonato.getId(),
-				campeonato.getDescricao(), pistas);
+		PistaCampeonatoIdDTO pistaCampeonatoIdDTO = new PistaCampeonatoIdDTO(campeonato.getId(), campeonato.getDescricao(), pistas);
 		return ResponseEntity.ok(pistaCampeonatoIdDTO);
 	}
 
@@ -103,7 +100,7 @@ public class ReportResource {
 		Corrida corrida = corridaService.findById(idCorrida);
 		List<PilotoCorrida> pilotoCorridas = pilotoCorridaService.findByCorridaOrderByColocacaoAsc(corrida);
 		List<Piloto> pilotos = new ArrayList<>();
-		List<Equipe> equipe = new ArrayList<>();
+		List<Equipe> equipes = new ArrayList<>();
 
 		for (PilotoCorrida pilotoCorrida : pilotoCorridas) {
 			try {
@@ -113,11 +110,11 @@ public class ReportResource {
 		}
 
 		for (Piloto piloto : pilotos) {
-			if (!equipe.contains(equipeService.findById(piloto.getEquipe().getId())))
-				equipe.add(equipeService.findById(piloto.getEquipe().getId()));
+			if (!equipes.contains(equipeService.findById(piloto.getEquipe().getId())))
+				equipes.add(equipeService.findById(piloto.getEquipe().getId()));
 		}
 
-		EquipeCorridaIdDTO equipeCorridaIdDTO = new EquipeCorridaIdDTO(corrida.getId(), equipe);
+		EquipeCorridaIdDTO equipeCorridaIdDTO = new EquipeCorridaIdDTO(corrida.getId(), equipes);
 		return ResponseEntity.ok(equipeCorridaIdDTO);
 	}
 
