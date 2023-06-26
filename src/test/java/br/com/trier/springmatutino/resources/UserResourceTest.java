@@ -2,6 +2,7 @@ package br.com.trier.springmatutino.resources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -18,11 +19,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import br.com.trier.springmatutino.SpringMatutinoApplication;
+import br.com.trier.springmatutino.config.jwt.JwtAuthFilter;
+import br.com.trier.springmatutino.config.jwt.JwtUserDetailService;
+import br.com.trier.springmatutino.config.jwt.JwtUtil;
+import br.com.trier.springmatutino.config.jwt.LoginDTO;
 import br.com.trier.springmatutino.domain.dto.UserDTO;
 
 @ActiveProfiles("test")
@@ -34,6 +40,9 @@ public class UserResourceTest {
 	
 	@Autowired
 	protected TestRestTemplate rest;
+	
+	@Autowired
+	protected JwtResource service;
 
 	private ResponseEntity<UserDTO> getUser(String url) {
 		return rest.getForEntity(url, UserDTO.class);
@@ -74,13 +83,33 @@ public class UserResourceTest {
 	    assertEquals(2, users.size());
 	}
 	
+	public String getToken() {
+		LoginDTO loginDTO = new LoginDTO("email", "senha");
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<LoginDTO> requestEntity = new HttpEntity<>(loginDTO, headers);
+		ResponseEntity<String> responseEntity = rest.exchange(
+				"/auth/token",
+				HttpMethod.POST,
+				requestEntity,
+				UserDTO.class);
+		
+		
+		
+	}
+	
 	@Test
 	@DisplayName("Cadastrar usuário")
 	@Sql(scripts = "classpath:/resources/sqls/limpa_tabelas.sql")
 	public void testCreateUser() {
-		UserDTO dto = new UserDTO(null, "nome", "email", "senha");
+		UserDTO dto = new UserDTO(null, "nome", "email", "senha", "ADMIN");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		
+		String token = service.authenticateAndGetToken(new LoginDTO("max", "1234"));
+		headers.add("Authorization", "Bearer " + token);
+		//headers.add("Authorization", "Bearer " + token);
 		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
 		ResponseEntity<UserDTO> responseEntity = rest.exchange(
 				"/usuarios",

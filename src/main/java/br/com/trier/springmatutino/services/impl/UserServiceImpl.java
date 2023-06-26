@@ -54,8 +54,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> findByName(String name) {
-		List<User> lista = repository.findByName(name);
+	public List<User> findByNameIgnoreCase(String name) {
+		List<User> lista = repository.findByNameIgnoreCase(name);
 		if (lista.size() == 0) {
 			throw new ObjetoNaoEncontrado("Nenhum usuário encontrado: %s".formatted(name));
 		}
