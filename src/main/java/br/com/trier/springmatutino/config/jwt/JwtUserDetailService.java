@@ -18,11 +18,11 @@ public class JwtUserDetailService implements UserDetailsService {
 	private UserRepository repository;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		br.com.trier.springmatutino.domain.User user = repository.findByName(username).orElseThrow(null);
+		br.com.trier.springmatutino.domain.User user = repository.findByEmail(email).orElseThrow(null);
 		return User.builder()
-				.username(user.getName())
+				.username(user.getEmail())
 				.password(encoder.encode(user.getPassword()))
 				.roles(user.getRoles().split(","))
 				.build();

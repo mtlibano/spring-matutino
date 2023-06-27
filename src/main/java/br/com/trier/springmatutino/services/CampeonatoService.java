@@ -9,7 +9,7 @@ public interface CampeonatoService {
     Campeonato salvar(Campeonato campeonato);
     List<Campeonato> listAll();
     Campeonato findById(Integer id);
-    Campeonato update(Campeonato equipe);
+    Campeonato update(Campeonato campeonato);
     void delete(Integer id);
     List<Campeonato> findByDescricaoIgnoreCase(String descricao);
     List<Campeonato> findByDescricaoContainsIgnoreCase(String descricao);

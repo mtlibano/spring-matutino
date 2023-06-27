@@ -11,8 +11,7 @@ import br.com.trier.springmatutino.domain.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 	
 	List<User> findByNameIgnoreCase(String name);
-	User findByEmail(String email);
-	//Optional<User> findByEmail(String email);
+	Optional<User> findByEmail(String email);
 	Optional<User> findByName(String name);
 
 }
