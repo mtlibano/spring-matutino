@@ -53,7 +53,7 @@ public class PistaResource {
         return ResponseEntity.ok(service.findByTamanhoBetween(tamInicial, tamFinal).stream().map(pista -> pista).toList());
     }
     
-    @GetMapping("/pais/{idPaisl}")
+    @GetMapping("/pais/{idPais}")
     public ResponseEntity<List<Pista>> findByPais(@PathVariable Integer idPais) {
         return ResponseEntity.ok(service.findByPaisOrderByTamanhoDesc(paisService.findById(idPais)));
     }
