@@ -23,27 +23,27 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 	
-	@Secured({"ROLE_ADMIN"})
+//	@Secured({"ROLE_ADMIN"})
 	@PostMapping
 	public ResponseEntity<UserDTO> insert(@RequestBody UserDTO user) {
 		User newUser = service.salvar(new User(user));
 		return newUser != null ? ResponseEntity.ok(newUser.toDto()) : ResponseEntity.badRequest().build();
 	}
 	
-	@Secured({"ROLE_USER"})
+//	@Secured({"ROLE_USER"})
 	@GetMapping("/{id}")
 	public ResponseEntity<UserDTO> findById(@PathVariable Integer id) {
 		User user = service.findById(id);
 		return ResponseEntity.ok(user.toDto());
 	}
 	
-	@Secured({"ROLE_USER"})
+//	@Secured({"ROLE_USER"})
 	@GetMapping
 	public ResponseEntity<List<UserDTO>> listAll() {
 		return ResponseEntity.ok(service.listAll().stream().map(user -> user.toDto()).toList());
 	}
 	
-	@Secured({"ROLE_ADMIN"})
+//	@Secured({"ROLE_ADMIN"})
 	@PutMapping("/{id}")
 	public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
 		User user = new User(userDTO);
@@ -52,14 +52,14 @@ public class UserResource {
 		return user != null ? ResponseEntity.ok(user.toDto()) : ResponseEntity.badRequest().build();
 	}
 	
-	@Secured({"ROLE_ADMIN"})
+//	@Secured({"ROLE_ADMIN"})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.ok().build();
 	}
 	
-	@Secured({"ROLE_USER"})
+//	@Secured({"ROLE_USER"})
 	@GetMapping("/name-list/{name}")
 	public ResponseEntity<List<UserDTO>> findByNameIgnoreCase(@PathVariable String name) {
 		return ResponseEntity.ok(service.findByNameIgnoreCase(name).stream().map(user -> user.toDto()).toList());
